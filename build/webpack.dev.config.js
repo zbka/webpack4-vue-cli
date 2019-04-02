@@ -16,6 +16,12 @@ const devWebpackConfig = merge(baseConfig, {
     port: 3824, // 端口
     host: 'localhost',
     overlay: true,
+    proxy: {
+      '/api': {
+        target: 'http://10.1.249.143:6688/NetXpert',
+        secure: false
+      }
+    },
     compress: false // 服务器返回浏览器的时候是否启动gzip压缩
   },
   watchOptions: {

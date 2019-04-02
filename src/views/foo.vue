@@ -24,7 +24,6 @@
             }
         },
         mounted () {
-            console.log(this)
             JH_news((response) => {
                 console.log(response.data.articles)
                 this.articles = response.data.articles

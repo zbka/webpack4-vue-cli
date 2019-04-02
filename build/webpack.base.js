@@ -40,8 +40,7 @@ module.exports = {
       {
         test: /\.css$/,
         use: [CssLoader, 'css-loader', 'postcss-loader'],
-        include: [path.resolve(__dirname, '../src')], //限制范围，提高打包速度
-        exclude: /node_modules/
+        // include: [path.resolve(__dirname, '../src')], //限制范围，提高打包速度
       },
       {
         test:/\.scss$/,
@@ -80,7 +79,6 @@ module.exports = {
         test: /\.(woff2?|eot|ttf|otf)(\?.*)?$/,
         loader: 'url-loader',
         options: {
-          limit: 10000,
           name: '[name].[hash:7].[ext]',
           outputPath: 'font/'
         }
@@ -111,7 +109,7 @@ module.exports = {
     }),
     new MiniCssExtractPlugin({
       filename: "css/[name].[chunkHash].css",
-      // publicPath: './',
+      publicPath: '/',
       chunkFilename: "[id].css"//异步加载的模块是要以文件形式加载哦，所以这时生成的文件名是以chunkname配置的
     }),
     new ProgressBarPlugin({

@@ -2,6 +2,9 @@ import Vue from 'vue'
 import Vuex from 'vuex'
 import VueRouter from 'vue-router'
 import route from './router'
+import ElementUI from 'element-ui';
+import 'element-ui/lib/theme-chalk/index.css';
+import './styles/font.js'
 import state from './vuex/state'
 import getters from './vuex/getters'
 import mutations from './vuex/mutations'
@@ -10,6 +13,7 @@ import App from './app.vue'
 require('./mock.js')
 Vue.config.devtools = true
 Vue.use(Vuex)
+Vue.use(ElementUI)
 Vue.use(VueRouter)
 
 const store = new Vuex.Store({
@@ -19,8 +23,19 @@ const store = new Vuex.Store({
     actions
 })
 const router = new VueRouter(
-    {mode: 'history', routes: route}
+    {mode: 'hash', routes: route}
 )
+router.beforeEach((to, from, next) => {
+    if (to.name == "login"){
+        next();
+    }
+    if(sessionStorage.loginStatus){
+        next();
+    }else{
+        next({path: '/login'});
+    }
+})
+
 // var root = document.getElementById("app");
 new Vue({
     store,
