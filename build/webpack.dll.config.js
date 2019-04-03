@@ -12,7 +12,7 @@ module.exports = {
         vendor: Object.keys(pkg.dependencies)
     },
     output: {
-        path: resolve('dist'),
+        path: resolve('dist/js'),
         filename: '[name].dll.js',
         library: '_dll_[name]' // 全局变量名，其他模块会从此变量上获取里面模块
     },
@@ -20,7 +20,7 @@ module.exports = {
     plugins: [
         new webpack.DllPlugin({
             name: '_dll_[name]',
-            path: resolve('dist/manifest.json'),
+            path: resolve('dist/js/manifest.json'),
             context: path.resolve(__dirname, '../')
         })
     ]
