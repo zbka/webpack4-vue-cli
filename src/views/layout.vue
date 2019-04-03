@@ -1,10 +1,10 @@
 <template>
     <el-container>
-        <el-aside class="nav_aside" width="200px">
+        <el-aside class="nav_aside" width="auto">
             <div class="logo_wrap">
-                <img width="30px" src="./img/logo.svg" alt=""> <span>Element Pro</span>
+                <img width="30px" src="./img/logo.svg" alt=""> <span v-show="!isCollapse">Element Pro</span>
             </div>
-            <el-menu :default-active="$route.path" router class="el-menu-vertical-demo" @select="handleSelect" @open="handleOpen" @close="handleClose"
+            <el-menu :collapse-transition="false" :collapse="isCollapse" :default-active="$route.path" router class="el-menu-vertical-demo" @select="handleSelect" @open="handleOpen" @close="handleClose"
                 background-color="#001529" text-color="#fff" active-text-color="#ffd04b">
                 <el-menu-item index="/NetXpert/businessApplication">
                     <i class="el-icon-menu"></i>
@@ -26,7 +26,7 @@
         </el-aside>
         <el-container>
             <el-header class="header_nav">
-                <div></div>
+                <el-button @click="handleChangeCollapse"  type="text" style="font-size: 20px;" class="el-icon-menu"></el-button>
             </el-header>
             <el-main>
                 <div style="overflow-y: auto;position: absolute;left: 0;top: 0;right: 0;bottom: 0;padding: 15px;">
@@ -41,12 +41,15 @@
     export default {
         data() {
             return {
+                isCollapse: false
             }
         },
         mounted() {
         },
         methods: {
-
+            handleChangeCollapse (){
+                this.isCollapse = !this.isCollapse;
+            }
         },
     }
 </script>
@@ -83,6 +86,7 @@
     .header_nav{
         position: relative;
         z-index: 2;
+        text-align: left;
         box-shadow: 0 1px 2px 0 rgba(0,0,0,.25);
     }
     .el-aside {
@@ -117,18 +121,18 @@
 
     .logo_wrap {
         height: 60px;
+        text-align: center;
         background: #002140;
         line-height: 60px;
         color: #fff;
         font-size: 20px;
         font-weight: 600;
-
         img {
             vertical-align: middle;
         }
-
         span {
             vertical-align: middle;
+            padding: 0 10px;
         }
     }
 </style>

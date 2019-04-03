@@ -4,31 +4,37 @@
             <el-table :data="tableData" style="width: 100%" @sort-change="handleSortChange">
                 <el-table-column align="center" label="业务ID" prop="ID">
                 </el-table-column>
-                <el-table-column align="center" label="提交时间" prop="submissionTime" sortable="custom">
+                <el-table-column align="center" label="提交时间" prop="submiteTime" sortable="custom">
                 </el-table-column>
-                <el-table-column align="center" label="客户名称" prop="name">
+                <el-table-column align="center" label="客户名称" prop="userName">
                 </el-table-column>
-                <el-table-column align="center" label="AS号" prop="ASnmber">
+                <el-table-column align="center" label="AS号" prop="asNumber">
                 </el-table-column>
                 <el-table-column align="center" label="设备" prop="device">
                 </el-table-column>
-                <el-table-column align="center" label="as-path" prop="asPath">
+                <el-table-column align="center" label="as-path" :showOverflowTooltip="true" prop="asPath">
                 </el-table-column>
-                <el-table-column align="center" label="prefix" prop="prefix">
+                <el-table-column align="center" label="prefix" :showOverflowTooltip="true" prop="prefix">
                 </el-table-column>
                 <el-table-column align="center" label="状态" prop="status">
+                    <template slot-scope="scope">
+                        <span :class="statusColor(scope.row.status)">{{scope.row.status == 0 ? '失败' : '成功'}}</span>
+                    </template>
                 </el-table-column>
                 <el-table-column align="center" label="执行时间" prop="executionTime" sortable>
                 </el-table-column>
-                <el-table-column align="center" label="详细" prop="detailed">
-                </el-table-column>
+                <!-- <el-table-column align="center" label="操作" prop="detailed">
+                    <template slot-scope="scope">
+                        <el-button @click="handleClick(scope.row)" type="text" size="small">详情</el-button>
+                    </template>
+                </el-table-column> -->
             </el-table>
             <div class="block">
                 <el-pagination
                 @size-change="handleSizeChange"
                 @current-change="handleCurrentChange"
                 :current-page="1"
-                :page-sizes="[10, 20, 30, 50]"
+                :page-sizes="[5, 10, 20]"
                 :page-size="10"
                 layout="total, sizes, prev, pager, next, jumper"
                 :total="tableTotal">
@@ -44,15 +50,9 @@
         data() {
             return {
                 tableLoading: false,
-                tableData: [
-                    { ID: '1',submissionTime: '2019 03-08',name: 'fwef',ASnmber: '123',device: 'fwef',asPath: 'wefwefwef',prefix: 'wef',status: 'ae',executionTime: '2019 12-12',detailed: 'awef' },
-                    { ID: '1',submissionTime: '2019 03-08',name: 'fwef',ASnmber: '123',device: 'fwef',asPath: 'wefwefwef',prefix: 'wef',status: 'ae',executionTime: '2019 12-12',detailed: 'awef' },
-                    { ID: '1',submissionTime: '2019 03-08',name: 'fwef',ASnmber: '123',device: 'fwef',asPath: 'wefwefwef',prefix: 'wef',status: 'ae',executionTime: '2019 12-12',detailed: 'awef' },
-                    { ID: '1',submissionTime: '2019 03-08',name: 'fwef',ASnmber: '123',device: 'fwef',asPath: 'wefwefwef',prefix: 'wef',status: 'ae',executionTime: '2019 12-12',detailed: 'awef' },
-                    { ID: '1',submissionTime: '2019 03-08',name: 'fwef',ASnmber: '123',device: 'fwef',asPath: 'wefwefwef',prefix: 'wef',status: 'ae',executionTime: '2019 12-12',detailed: 'awef' },
-                ],
+                tableData: [],
                 tableConfig: {
-                    pageSize: 10,
+                    pageSize: 5,
                     currentPange: 1,
                     order: []
                 },
@@ -60,6 +60,12 @@
             }
         },
         methods: {
+            statusColor (value){
+                return {
+                    failed: value == 0 ? true : false,
+                    successed: value == 0 ? false : true
+                }
+            },
             handleSizeChange (pageSize){
                 this.tableConfig.pageSize = pageSize;
                 this.getDableData(this.tableConfig)
@@ -74,9 +80,10 @@
             },
             getDableData (tableConfig){
                 this.tableLoading = true;
-                axios.post('/news/index',tableConfig).then((res) => {
+                axios.post('/news/groupApprovalList',tableConfig).then((res) => {
                     this.tableLoading = false;
-                    // console.log(res);
+                    this.tableData = res.data.data;
+                    this.tableTotal= res.data.total;
                 })
             }
 
@@ -94,5 +101,4 @@
             padding: 8px 15px;
         }
     }
-    
 </style>

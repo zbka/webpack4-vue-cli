@@ -1,5 +1,5 @@
 <template>
-    <div class="login_block" style="height: 100%;">
+    <div v-on:keyup.enter="submitForm" class="login_block" style="height: 100%;">
             <div class="header_bar">
                 欢迎登录自服务平台
             </div>
@@ -21,7 +21,7 @@
                                 </span>
                                 <el-input type="text" placeholder="用户名" v-model="formData.user" autocomplete="off"></el-input>
                             </el-form-item>
-                            <el-form-item  prop="pass">
+                            <el-form-item :error="passWorldError"  prop="pass">
                                 <span class="icon_wrap">
                                     <svg class="icon" aria-hidden="true">
                                         <use xlink:href="#icon-webicon204"></use>
@@ -30,7 +30,7 @@
                                 <el-input type="password" placeholder="密码" v-model="formData.pass" autocomplete="off"></el-input>
                             </el-form-item>
                             <el-form-item>
-                                <el-button style="width: 100%;" :loading="isFormSubmit" type="primary" size="small" @click="submitForm()">登 录</el-button>
+                                <el-button style="width: 100%;" :loading="isFormSubmit" type="primary" size="small" @click="submitForm">登 录</el-button>
                             </el-form-item>
                         </el-form>
                     </div>
@@ -39,6 +39,7 @@
     </div>
 </template>
 <script>
+    import axios from 'axios'
     export default {
         data (){
             var checkUser = (rule, value, callback) => {
@@ -54,6 +55,7 @@
                 return callback()
             }
             return {
+                passWorldError: '',
                 isFormSubmit: false,
                 loginLoading: false,
                 formRuls: {
@@ -61,7 +63,8 @@
                         { validator: checkUser, trigger: 'change' }
                     ],
                     pass : [
-                        { validator: checkPass, trigger: 'change' }
+                        { validator: checkPass, trigger: 'change' },
+                        { validator: checkPass, trigger: 'submit' },
                     ]
                 },
                 formData: {
@@ -80,8 +83,11 @@
                         sessionStorage.setItem("loginStatus", true);
                         this.$router.push({path: '/NetXpert/businessApplication'});
                     }else{
-                        this.$refs.loginRuleForm.validateField((prop)=>{
-                            console.log(prop)
+                        if(this.passWorldError !== ""){
+                            this.passWorldError='';
+                        }
+                        this.$nextTick(() => {
+                            this.passWorldError='密码错误'
                         })
                     }
                 })
@@ -133,7 +139,7 @@
         left: 10px;
         line-height: 50px;
     }
-    .el-input input{
+    .login_block .el-input input{
         padding-left: 35px;
     }
     .icon {

@@ -33,6 +33,8 @@ const count = function (num, str){
     return result;
 }
 const groupApprovalList = function (options){
+    var countryList = ['日本','香港','美国','德国','法国','韩国'];
+    var cityList = ['北京','上海','重庆','石家庄','郑州','南京'];
     var reqBody = JSON.parse(options.body)
     let res = {};
     res.total = 50;
@@ -41,9 +43,9 @@ const groupApprovalList = function (options){
         let newArticleObject = {
             ID: Random.increment(),
             submiteTime: Random.date('yyyy-MM-dd HH:mm'),
-            userName: Random.cname(),//随机中文名
+            userName: countryList[Random.integer(0, 5)] + Random.string('upper', 2, 4),//随机中文名
             asNumber: Random.integer(10000,10099),
-            device: Random.string(5),
+            device: cityList[Random.integer(0, 5)] + 'E' + Random.string('upper', 2, 2),
             asPath: Random.ip() + ";" + Random.ip(),
             prefix: Random.ip() + ";" + Random.ip(),
             status: Random.integer(0,2),
@@ -68,9 +70,18 @@ const groupApprovaldevicelList = function (options){
     }
     return res
 }
+const checkPass = function (options){
+    var reqBody = JSON.parse(options.body)
+    if (reqBody.pass == "123456"){
+        return {type: 'sucesse'}
+    }else{
+        return {type: 'error'}
+    }
+}
 Mock.setup({
     timeout: '1400-1800'
 })
 Mock.mock('/news/index', 'post', produceNewsData);
 Mock.mock('/news/groupApprovalList', 'post', groupApprovalList);
 Mock.mock('/news/groupApprovaldevicelList', 'post', groupApprovaldevicelList);
+Mock.mock('/login', 'post', checkPass);
