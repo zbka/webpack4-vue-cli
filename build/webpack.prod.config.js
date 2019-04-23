@@ -2,12 +2,12 @@ const path = require('path');
 const chalk = require('chalk');
 const CopyWebpackPlugin = require('copy-webpack-plugin') // 复制静态资源的插件
 const CleanWebpackPlugin = require('clean-webpack-plugin') // 清空打包目录的插件
-const VueLoaderPlugin = require('vue-loader/lib/plugin');
+const VueLoaderPlugin = require('vue-loader/lib/plugin');//vueLoader
 const HtmlWebpackPlugin = require('html-webpack-plugin'); // 生成html的插件
-const MiniCssExtractPlugin = require('mini-css-extract-plugin');
+const MiniCssExtractPlugin = require('mini-css-extract-plugin');//抽离css
 const CssLoader = { loader: MiniCssExtractPlugin.loader, options: {publicPath: '../'} };
-const WebpackParallelUglifyPlugin = require('webpack-parallel-uglify-plugin')
-const OptimizeCSSPlugin = require('optimize-css-assets-webpack-plugin')
+const WebpackParallelUglifyPlugin = require('webpack-parallel-uglify-plugin')//多进程压缩js
+const OptimizeCSSPlugin = require('optimize-css-assets-webpack-plugin')//压缩css
 const ProgressBarPlugin = require('progress-bar-webpack-plugin');
 const HappyPack = require('happypack');
 const os = require('os');
@@ -46,7 +46,7 @@ module.exports = {
                 name: 'vendor',
                 test: /[\\/]node_modules[\\/]/,
                 chunks: 'all',
-                priority: 10
+                priority: 10//优先权
             },
           }
         }
@@ -121,7 +121,7 @@ module.exports = {
             template: path.resolve(__dirname, '..', 'src','index.html'),
             filename:'index.html',
             chunks:['index', 'common', 'vendor', 'runtime'],
-            hash:true,//防止缓存
+            hash:false,//防止缓存
             minify:{
                 removeAttributeQuotes:true//压缩 去掉引号
             }

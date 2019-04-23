@@ -89,6 +89,7 @@
 
         },
         mounted () {
+            console.log(this)
             this.getDableData(this.tableConfig);
         }
     }

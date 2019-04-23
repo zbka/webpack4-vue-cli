@@ -22,6 +22,10 @@
                     <i class="el-icon-edit-outline"></i>
                     <span slot="title">集团下发列表</span>
                 </el-menu-item>
+                <el-menu-item index="/NetXpert/userManagement">
+                    <i class="el-icon-setting"></i>
+                    <span slot="title">用户管理</span>
+                </el-menu-item>
             </el-menu>
         </el-aside>
         <el-container>

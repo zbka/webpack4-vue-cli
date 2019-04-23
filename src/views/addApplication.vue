@@ -1,30 +1,42 @@
 <template>
     <section class="container addApplication">
-        <!-- <el-row class="cusstorm_list">
-            <el-col :span="12">
-                <h5 style="margin: 5px 0 15px;text-align: left;">用户列表</h5>
-                <el-tree :highlight-current="true" :data="treeData" accordion :props="defaultProps" @node-click="handleNodeClick"></el-tree>
-            </el-col>
-            <el-col :span="12">
-                <h5 style="margin: 5px 0 15px;text-align: left;">设备列表</h5>
-                <div v-show="deviceList">
-                    <el-tree :data="DevicetreeData" node-key="id" show-checkbox :default-checked-keys="['all']" :props="defaultProps" @node-click="handleNodeClick"></el-tree>
-                </div>
-            </el-col>
-        </el-row> -->
         <el-row class="texarea_wrap">
-            <el-col style="text-align: left;padding-bottom: 10px;" :span="24">
-                <span class="select_title">客户名称：</span><el-cascader style="margin-right: 10px;" filterable expand-trigger="hover"  size="mini" :options="options" :show-all-levels="false"></el-cascader>
-                <span class="select_title">设备名称：</span><el-select size="mini" v-model="value5" multiple placeholder="请选择"><el-option v-for="item in DevicetreeData" :key="item.value" :label="item.label" :value="item.value"></el-option></el-select>
+            <el-col :span="24" style="text-align: left;padding-bottom: 10px;" >
+                <el-form :inline="true" :rules="form1Rule" ref="form1" size="small" :model="form1">
+                    <el-form-item prop="ASNumber" label="AS号：">
+                        <el-input @input="asNumInput" @change="asNumChange" class="asNumber" v-model="form1.ASNumber"></el-input>
+                    </el-form-item>
+                    <el-form-item prop="clientName" label="客户名称：">
+                        <el-cascader v-model="form1.clientName"  filterable expand-trigger="hover"  :options="options" :show-all-levels="false"></el-cascader>
+                    </el-form-item>
+                    <el-form-item prop="deviceList" label="设备：">
+                        <el-select v-model="form1.deviceList"  multiple >
+                            <el-option v-for="item in DevicetreeData" :key="item.value" :label="item.label" :value="item.value"></el-option>
+                        </el-select>
+                    </el-form-item>
+                </el-form>
             </el-col>
             <el-col :span="24">
-                <el-form ref="form" label-position="top" :model="form" label-width="80px">
+                <el-form ref="form" :model="form" label-position="top"  label-width="80px">
                     <el-form-item label="as-path">
                         <el-input :autosize="autosize" type="textarea" v-model="form.asPath"></el-input>
                     </el-form-item>
                     <el-form-item label="prefix">
                         <el-input :autosize="autosize" type="textarea" v-model="form.prefix"></el-input>
                     </el-form-item>
+                    <el-upload
+                        action="/news/upLoad"
+                        class="upload"
+                        :on-preview="handlePreview"
+                        :before-remove="beforeRemove"
+                        :limit="1"
+                        :on-success="fileUploadSuccess"
+                        :on-error="fileUploadFaild"
+                        :on-exceed="handleExceed"
+                        :file-list="fileList">
+                        <el-button size="small" type="text">附件上传</el-button>
+                        <!-- <div slot="tip" class="el-upload__tip">只能上传jpg/png文件，且不超过500kb</div> -->
+                    </el-upload>
                     <el-form-item class="button_wrap">
                         <el-button size="small" type="primary" :loading="createLoading" @click="onSubmit">立即创建</el-button>
                         <el-button size="small">取消</el-button>
@@ -39,92 +51,16 @@
 <script>
     export default {
         data (){
+            const checkform1IsImpty = (rule, value, callback) => {
+                console.log(rule)
+                if(value.length == 0){
+                    return callback(new Error('不能为空'));
+                };
+                callback();
+            };
             return {
                 options: [
-                    {value: 1, label: '日本', children: [
-                        {value: 2,label: '日本IIJ'},
-                        {value: 3,label: '日本CAL'},
-                        {value: 3,label: '日本CAL'},
-                        {value: 4,label: '日本NTT'},
-                        {value: 5,label: '日本Virte'},
-                    ]},
-                    {value: 1, label: '日本', children: [
-                        {value: 2,label: '日本IIJ'},
-                        {value: 3,label: '日本CAL'},
-                        {value: 3,label: '日本CAL'},
-                        {value: 4,label: '日本NTT'},
-                        {value: 5,label: '日本Virte'},
-                    ]},
-                    {value: 1, label: '日本', children: [
-                        {value: 2,label: '日本IIJ'},
-                        {value: 3,label: '日本CAL'},
-                        {value: 3,label: '日本CAL'},
-                        {value: 4,label: '日本NTT'},
-                        {value: 5,label: '日本Virte'},
-                    ]},
-                    {value: 1, label: '日本', children: [
-                        {value: 2,label: '日本IIJ'},
-                        {value: 3,label: '日本CAL'},
-                        {value: 3,label: '日本CAL'},
-                        {value: 4,label: '日本NTT'},
-                        {value: 5,label: '日本Virte'},
-                    ]},
-                    {value: 1, label: '日本', children: [
-                        {value: 2,label: '日本IIJ'},
-                        {value: 3,label: '日本CAL'},
-                        {value: 3,label: '日本CAL'},
-                        {value: 4,label: '日本NTT'},
-                        {value: 5,label: '日本Virte'},
-                    ]},
-                    {value: 1, label: '日本', children: [
-                        {value: 2,label: '日本IIJ'},
-                        {value: 3,label: '日本CAL'},
-                        {value: 3,label: '日本CAL'},
-                        {value: 4,label: '日本NTT'},
-                        {value: 5,label: '日本Virte'},
-                    ]},
-                    {value: 1, label: '日本', children: [
-                        {value: 2,label: '日本IIJ'},
-                        {value: 3,label: '日本CAL'},
-                        {value: 3,label: '日本CAL'},
-                        {value: 4,label: '日本NTT'},
-                        {value: 5,label: '日本Virte'},
-                    ]},
-                    {value: 1, label: '日本', children: [
-                        {value: 2,label: '日本IIJ'},
-                        {value: 3,label: '日本CAL'},
-                        {value: 3,label: '日本CAL'},
-                        {value: 4,label: '日本NTT'},
-                        {value: 5,label: '日本Virte'},
-                    ]},
-                    {value: 1, label: '日本', children: [
-                        {value: 2,label: '日本IIJ'},
-                        {value: 3,label: '日本CAL'},
-                        {value: 3,label: '日本CAL'},
-                        {value: 4,label: '日本NTT'},
-                        {value: 5,label: '日本Virte'},
-                    ]},
-                    {value: 1, label: '日本', children: [
-                        {value: 2,label: '日本IIJ'},
-                        {value: 3,label: '日本CAL'},
-                        {value: 3,label: '日本CAL'},
-                        {value: 4,label: '日本NTT'},
-                        {value: 5,label: '日本Virte'},
-                    ]},
-                    {value: 1, label: '日本', children: [
-                        {value: 2,label: '日本IIJ'},
-                        {value: 3,label: '日本CAL'},
-                        {value: 3,label: '日本CAL'},
-                        {value: 4,label: '日本NTT'},
-                        {value: 5,label: '日本Virte'},
-                    ]},
-                    {value: 1, label: '日本', children: [
-                        {value: 2,label: '日本IIJ'},
-                        {value: 3,label: '日本CAL'},
-                        {value: 3,label: '日本CAL'},
-                        {value: 4,label: '日本NTT'},
-                        {value: 5,label: '日本Virte'},
-                    ]},
+                    
                     {value: 1, label: '日本', children: [
                         {value: 2,label: '日本IIJ'},
                         {value: 3,label: '日本CAL'},
@@ -144,8 +80,6 @@
                         {value: 41,label: '香港REACH'},
                     ]}
                 ],
-                value5: '',
-                currentSelectName: '',
                 currentSelecDevice: [],
                 DevicetreeData: [
                     {value: 1,label: '北京IIJ'},
@@ -164,22 +98,40 @@
                     asPath: '',
                     prefix: ''
                 },
-                deviceList: false
+                form1:{
+                    deviceList: [],
+                    clientName: [],
+                    ASNumber: ''
+                },
+                form1Rule: {
+                    deviceList: { validator: checkform1IsImpty, trigger: 'change' },
+                    clientName: { validator: checkform1IsImpty, trigger: 'blur' }
+                }
             }
         },
         methods: {
-            handleNodeClick (params,node){
-                if (node.childNodes.length == 0){
-                    this.deviceList = true;
-                    this.currentSelectName = params.label;
+            onSubmit (){
+                this.$refs.form1.validate((vali,prop) => {
+                    console.log(this.form1.clientName)
+                    console.log(vali)
+                });
+            },
+            asNumInput(){
+                console.log(this.form1.ASNumber)
+                if(this.form1.ASNumber == 23){
+                    this.form1.clientName = [7,9]
+                }else{
+                    this.form1.clientName = []
                 }
             },
-            onSubmit (){
-                if(this.currentSelectName == ''){
-                    this.$message.error('请选择客户');
-                    console.log(this.value5);
-                    return;
-                }
+            asNumChange(){
+
+            },
+            fileUploadSuccess(){
+                console.log("yes");
+            },
+            fileUploadFaild(){
+                console.log("no");
             }
         }
     }
@@ -188,9 +140,6 @@
     h5{
         font-size: 16px;
     }
-    // .texarea_wrap .el-cascader-menu{
-    //     height: 400px;
-    // }
     .addApplication{
         .el-select__tags{
             flex-wrap: nowrap;
@@ -198,6 +147,12 @@
         }
         .select_title{
             font-size: 14px;
+        }
+        .asNumber{
+            width: 80px;
+        }
+        .upload{
+            width: 200px;
         }
     }
     .cusstorm_list{
@@ -214,9 +169,5 @@
     }
     .button_wrap{
         text-align: center;
-    }
-    .texarea_wrap .el-form-item__label{
-        line-height: 16px;
-        padding-bottom: 6px;
     }
 </style>

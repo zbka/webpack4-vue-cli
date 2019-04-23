@@ -32,7 +32,11 @@ const count = function (num, str){
     }
     return result;
 }
+const upLoad = function (){
+    return {msg: "sucesse"}
+}
 const groupApprovalList = function (options){
+    console.log(options)
     var countryList = ['日本','香港','美国','德国','法国','韩国'];
     var cityList = ['北京','上海','重庆','石家庄','郑州','南京'];
     var reqBody = JSON.parse(options.body)
@@ -83,5 +87,6 @@ Mock.setup({
 })
 Mock.mock('/news/index', 'post', produceNewsData);
 Mock.mock('/news/groupApprovalList', 'post', groupApprovalList);
+Mock.mock('/news/upLoad', 'post', upLoad);
 Mock.mock('/news/groupApprovaldevicelList', 'post', groupApprovaldevicelList);
 Mock.mock('/login', 'post', checkPass);

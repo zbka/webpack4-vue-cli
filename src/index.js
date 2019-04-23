@@ -12,7 +12,6 @@ import actions from './vuex/actions'
 import App from './app.vue'
 // if(process.env.NODE_ENV==='development'){require('./mock.js')} //选择性打包
 require('./mock.js')
-console.log(22222)
 Vue.config.devtools = true
 Vue.use(Vuex)
 Vue.use(ElementUI)
